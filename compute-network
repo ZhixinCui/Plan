@@ -1,4 +1,4 @@
-#链路状态协议
+#链路状态协议(OSPF and IS-IS)
 
 ##矢量基本概念
 RIB:可达目的地址的数据库；创建RIB的机制：路由器之间交流目的地址及其关联信息的程序；到目的地最短路径的算法。
@@ -27,5 +27,46 @@ A|--(7)--C--(18)----X
  Announcement Headers：包含标识字段、sequence number, age, and checksum等。
  Database Synchronization：由于数据库是相同的，新上线的路由器无须让其他路由器重新发送通告报文，只需要和邻居路由器的数据库进行同步就可以了。
  Areas: 1)每个区域有相同的数据库 2）只可以在同一个区域flood。
+ 
+ ##Message type
+ ###术语
+  标识路由器:OSPF用Router-id;IS-IS用System-id
+  链路状态：OSPF用LSA;IS-IS用LSP
+  分层：OSPF用backbone area和nonbackbone area;IS-IS用level-1和level-2
+ ###消息封装
+  OSPF:通过网络层，IP协议号89；组播或单播，组播地址：224.0.0.5 and 224.0.0.6；
+  IS-IS:通过链路层；组播或单播，组播地址：0180:c200:0014 or 0180:c200:0015；
+  安全：OSPF使用IP协议，容易受到DDOS等攻击；IS-IS使用链路层协议，安全性较好；
+  Qos：OSPF可以在包头中设置高优先级，保证包的快速传递；IS-IS不使用IP协议，需要厂商使用私有的机制来保证；
+ ###消息架构
+  OSPF:使用固定的32bit，不利于扩展；
+  IS-IS：可以根据type/length/value（TLV）进行扩展，0-254字节；
+ ###消息类型
+  OSPF:hello,Database Description (DD),Link State Request;Link State Acknowledgement;Link State Update
+  IS-IS:IS-IS Hello (IIH,分为L1，L2和P2P子类),Complete Sequence Number PDU (CSNP，分为L1，L2子类),Partial Sequence Number PDU (PSNP，分为L1，L2子类),Link State PDU (LSP，分为L1，L2子类)
+
+##Addressing, Neighbor Discovery, and Adjacencies
+###OSPF Router and Area ID
+ OSPF的Router ID:32bit,必须配置，且唯一，选择方式：手动配置>loopback 地址>物理接口地址>
+ OSPF的Area ID:32bit,骨干区域为0，其余为非骨干区域。
+###IS-IS Router and Area ID
+ IS-IS的Router id和area id通过Network Entity Title(NET)配置在一起，用16进制表示，NET分为四个部分：
+  AFI:1字节，在IP网络中作为area id的一部分
+  Area ID:0-12 字节
+  Sys ID:6字节
+  SEL:1字节，标识上层协议，在路由器上值为0x00
+ 建议：
+  Area id:
+   使用AFI表示NET：05.00d0.b775.ff31.00，area id：05
+   使用NSAP表示NET：49.0005.00d0.b775.ff31.00，area id：0005，49为本地AFI地址
+
+
+  
+  
+
+
+
+   
+  
  
  
