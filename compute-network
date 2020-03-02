@@ -59,8 +59,62 @@ A|--(7)--C--(18)----X
   Area id:
    使用AFI表示NET：05.00d0.b775.ff31.00，area id：05
    使用NSAP表示NET：49.0005.00d0.b775.ff31.00，area id：0005，49为本地AFI地址
+##Hello
+###OSPF 
+ version:8bit
+ Type:8bit
+ Packet Length:16bit
+ RouterID:32bit
+ Area ID:32bit
+ Checksum:16bit
+ AuType:16bit
+ Authentication:32bit
+ Authentication:32bit
+ 以上同时也是Hello 包头的字段
+ Network mask:32bit
+ HelloInterval:16bit,LAN 10s,非lan：30s。
+ Options:8bit
+ Router Priority:8bit
+ RouterDeadInterval:32bit，4倍HelloInterval
+ Designated Router:32bit
+ Backup Designated Router:32bit
+ Neighbor:32bit
+###IS-IS
+ IS-IS Hello分为三种，LAN L1 hello，LAN L2 hello,P2P Hello
+ LAN Hello:
+  Intradomain Routing Protocol Discriminator = 0x83:1
+  Length Indicator :1
+  Protocol ID =0x01:1
+  ID length=0x00:1
+  Type = 0x0f(L1) or 0x10(L2):1
+  Version=0x01:1
+  Reserved=0x00:1
+  Maximum Area Address:1
+  以上也是Hello 包头的字段
+  Reserved:6
+  Circuit Type:2，0：保留，1：L1; 2:L2; 3:L1和L2
+  Source ID：6bit
+  Holding Timer:2bit,在宣告邻居dead之前的等待时间，1/3的holding timer等于hello时间
+  PDU length:2B
+  R:1bit
+  Priority:7bit
+  LAN ID:7B
+  TLVS:可变
+  
+  P2P hello
+   没有Priority,R和LAN ID
+   增加Local Circuit ID：1B
 
-
+  TLV:
+   Area Addresses TLV (type 1)
+   Intermediate System Neighbors TLV (type 6)
+   Protocols Supported TLV (type 129)
+   IP Interface Address TLV (type 132)
+   Authentication Information TLV (type 10)
+   Padding TLV (type 8)
+   
+   Dynamic Hostname Exchange(137)
+    在LSP中传递hostname字段，生成hostname和sysid的映射表
   
   
 
