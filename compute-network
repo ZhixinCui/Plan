@@ -115,6 +115,9 @@ A|--(7)--C--(18)----X
    
    Dynamic Hostname Exchange(137)
     在LSP中传递hostname字段，生成hostname和sysid的映射表
+  ###IS-IS 邻居
+   L1: 收到L1 hello包，有一个或多个AID匹配，否则则不建立；
+   L2: 收到L2 Hello包（不检查AID）
   
   
 
