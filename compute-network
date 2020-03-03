@@ -118,10 +118,32 @@ A|--(7)--C--(18)----X
   ###IS-IS 邻居
    L1: 收到L1 hello包，有一个或多个AID匹配，否则则不建立；
    L2: 收到L2 Hello包（不检查AID）
-  
-  
-
-
+  ###OSPF DR/BDR
+   在broadcast和NBMA上选DR/BDR，减少邻居数量；
+   路由器分为DR,BDR和DRother，DR路由器把包发到组播地址224.0.0.5（AllSPFRouters），DRother把包发到224.0.0.6（AllDRouters），DRohter路由器和DB/BDR
+   建立邻居关系，DR和BDR之间建立邻居关系，BDR监听DR的状态。
+   DR选举：接口概念，优先级思科默认1，Juniper默认128，如果设置为0，则不参与选举。在广播链路上，接口two-way之后，进行DR/BDR选举，在发出的报文中
+    DR和BDR字段为0.0.0.0，如果在dead time超时之前，收到了包含DR/BDR的报文，则停止该选举，接受现有的DB/BDR；否则，则认为网络中不存在DR/BDR,通告自身接口为DR/BDR的报文。DR与BDR不具有抢占性。
+    1.  Of all the neighbors on a link with which bidirectional communication has been established, list the neighbors that are eligible to become the DR or BDR (neighbors whose advertised priority is greater than 0). The router includes itself in this list unless its interface priority is 0.
+    2.  From this list, create a subset of routers that includes all routers except the ones listing their own address in the DR field of their Hellos (thus claiming to be the DR).
+    3.  Select from the subset all routers who claim to be the BDR by including their own address in the BDR field of their Hellos. From this subset, the router with the highest priority value becomes the BDR. If the priority values are equal, the router with the highest RID becomes the BDR.
+    4.  If no router in the list claims to be the BDR, the router on the list with the highest priority becomes the BDR. Again, if the priorities are equal, the router with the highest RID becomes the BDR.
+    5.  From the original list, select all routers claiming to be the DR. Using the same qualifications as are used for selecting the BDR (highest priority value with the highest RID used as a tie breaker), select the DR.
+    6.  If no router claims to be the DR, the newly elected BDR becomes the DR and Steps 2 through 4 are repeated to elect another BDR.
+  ###IS-IS DIS
+   没有备用DIS;优先级默认为64，高优先级的路由器会抢占DIS;优先级为0的也可以参与DIS选举;在广播网上会建立全互联的邻居关系，而不是仅和DIS；分为L1 DIS和L2 DIS
+   选举过程：1）优先级大的 2）网段上 SNPA (MAC address)大的。
+   DIS选举很快，一旦收到高优先级（或大MAC地址）的Hello报文，则进行选举。
+##Network type
+###OSPF
+ Broadcast network
+ Point-to-point network
+ Nonbroadcast multi-access network 
+ Point-to-multipoint network
+ Virtual link
+###IS-IS
+ Broadcast network
+ Point-to-point network
 
    
   
