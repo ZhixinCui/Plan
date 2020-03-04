@@ -171,7 +171,13 @@ A|--(7)--C--(18)----X
  LSP 确认：
   P2P:发送PSNP显式确认
   广播：隐式确认，The DIS periodically (every 10 seconds) multicasts a CSNP on the broadcast link, which describes the LSPs in its LS database. When a router sends an LSP on the broadcast link, the LSP should be included in subsequent CSNPs. If it is not, the originating router will resend the LSP.
-
+  ###Metric type
+   OSPF:
+    100M/带宽，
+    E1:外部路由cost+内部路由cost
+    E2:外部路由cost
+   IS-IS:
+    思科和juniper默认10，original 6-bit metrics are called narrow metrics, and the 32-bit metrics are called wide metrics。
  
    
   
