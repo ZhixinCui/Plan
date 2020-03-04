@@ -145,6 +145,34 @@ A|--(7)--C--(18)----X
  Broadcast network
  Point-to-point network
 
+##OSPF flood，在本地链路上传播
+###LSU更新
+ 在P2P,P2MP,虚链路上单播发送；
+ 在广播链路上，使用组播发送；
+ 在NBMA上使用单播发送
+###LSA 确认
+ 当LSU发送之后，路由器会将该LSA放在重传列表里，在等待重传时间（默认5s）内，没收到LSA消息，则重发，否则不重发。重发使用单播通信。
+ 确认消息只包含LSA的头部消息。
+ 显式确认: 直接发送LSA确认消息
+ 隐式确认：发送相同的LSA 实例
+ 延时确认：等待一段时间后确认，可以一次确定多个LSA
+ 立即确认：收到邻居发过来的重复的LSA;收到超时的LSA(age time 1800s)
+ 
+ age：默认为1，每经过一个路由器加1，最大3600s，刷新时间1800s；如果两条相同的LSA的age时间差小于15m，则认为两条LSA相同。
+ LSA的比较：sequence number recent > larger checksums > maxages >  lower age
+ 
+ 限制：除了broadcast和NBMA的DR,路由器不会从收到该LSA的接口将LSA发出去。
+ 
+##IS-IS flood
+ Remaining Lifetime: 16bit，默认1200，采用递减方式，0为超时。
+ 序列号：从1开始，最大2^32 -1 
+ LSP比较：0 > larger sequence number > no checksum error 则相同
+ 
+ LSP 确认：
+  P2P:发送PSNP显式确认
+  广播：隐式确认，The DIS periodically (every 10 seconds) multicasts a CSNP on the broadcast link, which describes the LSPs in its LS database. When a router sends an LSP on the broadcast link, the LSP should be included in subsequent CSNPs. If it is not, the originating router will resend the LSP.
+
+ 
    
   
  
